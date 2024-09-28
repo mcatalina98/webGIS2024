@@ -9,3 +9,11 @@ th, td {
     padding: 8px;
     text-align: left;
 }
+
+
+#map {
+    height: 500px; /* Puedes ajustar la altura según sea necesario */
+    width: 100%;   /* Esto lo hará ocupar el ancho completo */
+    border: 1px;
+    border-color: black;
+}

@@ -36,12 +36,14 @@ app.get('/', (req, res) => {
 
 //Endpoints
 // Endpoint para consultar todas las tablas del esquema public
+// Endpoint para consultar todas las tablas del esquema public
 app.get('/tablas', async (req, res) => {
   try {
     const query = `
       SELECT table_name 
       FROM information_schema.tables 
-      WHERE table_schema = 'public';
+      WHERE table_schema = 'public'
+      AND table_name NOT IN ('geography_columns', 'geometry_columns', 'spatial_ref_sys');
     `;
     const result = await client.query(query);
     res.json(result.rows);
@@ -50,6 +52,24 @@ app.get('/tablas', async (req, res) => {
     res.status(500).send('Error al obtener las tablas');
   }
 });
+
+// tablas geo
+
+app.get('/tablasgeo', async (req, res) => {
+  try {
+    const query = `
+      SELECT f_table_name AS table_name
+      FROM geometry_columns
+      WHERE f_table_schema = 'public';
+    `;
+    const result = await client.query(query);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error ejecutando la consulta', err);
+    res.status(500).send('Error al obtener las tablas con geometría');
+  }
+});
+
 
 // Ruta para consultar datos de una tabla específica en el esquema 'public'
 app.get('/tablas/:nombreTabla', async (req, res) => {
@@ -67,7 +87,7 @@ app.get('/tablas/:nombreTabla', async (req, res) => {
     }
   });
 
-// Desplegar en un servicio local a través del puerto 3030
+// Desplegar en un servicio local a través del puerto 3032
 app.listen(3032, () => {
     console.log('Servidor ejecutándose en http://localhost:3032');
 });
