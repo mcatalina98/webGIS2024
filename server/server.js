@@ -15,77 +15,86 @@ const client = new Client({
         rejectUnauthorized: false,   // Verifica el certificado                 // Puerto donde está PostgreSQL (por defecto 5432)
     }
     });
+    
 
-    // Conectar a la base de datos
+// Conectar a la base de datos
 client.connect(err => {
-    if (err) {
+  if (err) {
       console.error('Error conectando a la base de datos con SSL', err.stack);
-    } else {
+  } else {
       console.log('Conectado a la base de datos PostgreSQL con SSL');
-    }
-  });
-
+  }
+});
 
 // * Servir archivos estáticos (CSS, JS, imágenes) *
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Ruta (index.html)
+// Ruta principal (index.html)
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public', 'index.html'));
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 
-//Endpoints
-// Endpoint para consultar todas las tablas del esquema public
+// * Endpoints *
+
 // Endpoint para consultar todas las tablas del esquema public
 app.get('/tablas', async (req, res) => {
   try {
-    const query = `
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public'
-      AND table_name NOT IN ('geography_columns', 'geometry_columns', 'spatial_ref_sys');
-    `;
-    const result = await client.query(query);
-    res.json(result.rows);
+      const query = `
+          SELECT table_name 
+          FROM information_schema.tables 
+          WHERE table_schema = 'public'
+          AND table_name NOT IN ('geography_columns', 'geometry_columns', 'spatial_ref_sys');
+      `;
+      const result = await client.query(query);
+      res.json(result.rows);
   } catch (err) {
-    console.error('Error ejecutando la consulta', err);
-    res.status(500).send('Error al obtener las tablas');
+      console.error('Error ejecutando la consulta', err);
+      res.status(500).send('Error al obtener las tablas');
   }
 });
 
-// tablas geo
-
+// Endpoint para consultar tablas con geometría (geo)
 app.get('/tablasgeo', async (req, res) => {
   try {
-    const query = `
-      SELECT f_table_name AS table_name
-      FROM geometry_columns
-      WHERE f_table_schema = 'public';
-    `;
-    const result = await client.query(query);
-    res.json(result.rows);
+      const query = `
+          SELECT f_table_name AS table_name
+          FROM geometry_columns
+          WHERE f_table_schema = 'public';
+      `;
+      const result = await client.query(query);
+      res.json(result.rows);
   } catch (err) {
-    console.error('Error ejecutando la consulta', err);
-    res.status(500).send('Error al obtener las tablas con geometría');
+      console.error('Error ejecutando la consulta', err);
+      res.status(500).send('Error al obtener las tablas con geometría');
   }
 });
 
-
-// Ruta para consultar datos de una tabla específica en el esquema 'public'
+// Endpoint para consultar los datos de una tabla específica en formato GeoJSON
 app.get('/tablas/:nombreTabla', async (req, res) => {
-    const nombreTabla = req.params.nombreTabla;
-  
-    try {
-      // Ejecutar consulta a la tabla específica
+  const nombreTabla = req.params.nombreTabla;
+
+  try {
+      // Ejecutar la consulta para obtener los datos de la tabla en formato GeoJSON
       const result = await client.query(`
-        SELECT * FROM public.${nombreTabla};
+          SELECT ST_AsGeoJSON(geom) AS geometry, * 
+          FROM public.${nombreTabla};
       `);
-      res.json(result.rows);  // Devuelve los datos de la tabla en formato JSON
-    } catch (err) {
+
+      // Formatear los datos como un FeatureCollection de GeoJSON
+      const geojson = {
+          type: "FeatureCollection",
+          features: result.rows.map(row => ({
+              type: "Feature",
+              geometry: JSON.parse(row.geometry),
+              properties: row  // Puedes ajustar las propiedades que desees incluir
+          }))
+      };
+      res.json(geojson);
+  } catch (err) {
       console.error('Error ejecutando la consulta', err.stack);
       res.status(500).send(`Error al consultar la tabla ${nombreTabla}`);
-    }
-  });
+  }
+});
 
 // Desplegar en un servicio local a través del puerto 3032
 app.listen(3032, () => {
