@@ -1,19 +1,172 @@
+/* Estilos generales para la tabla */
+/* Estilos generales para el body */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Estilos para el header */
+header {
+    background-color: #c6c8cb; /* Color de fondo suave */
+    color: #000000; /* Color de texto oscuro */
+    box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
+}
+
+.header-container {
+    max-width: 1100px; /* Ancho máximo */
+    margin: 0 auto; /* Centra el contenedor */
+    align-items: center; /* Centra verticalmente los elementos dentro del header */
+    justify-content: flex-start; /* Alinea todos los elementos a la izquierda */
+    padding: 10px 20px; /* Ajusta el relleno según sea necesario */
+}
+
+.header-title {
+    font-size: 30px; /* Tamaño de fuente moderado */
+    margin: 5; /* Elimina márgenes */
+    font-weight: bold; /* Negrita */
+    color: #000000; /* Color del título */
+    text-align: left; /* Alineación a la izquierda */
+    white-space: nowrap;
+}
+
+.dropbtn {
+    background-color: #040220; /* Color de fondo del botón */
+    color: white; /* Color del texto */
+    padding: 10px 15px; /* Espaciado */
+    border: none; /* Sin borde */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    font-size: 16px; /* Tamaño de fuente */
+    transition: background-color 0.3s; /* Transición suave */
+    white-space: nowrap;
+}
+
+.dropbtn:hover {
+    background-color: #88b5de; /* Color al pasar el mouse */
+}
+
+.dropdown-content {
+    display: none; /* Oculta el contenido por defecto */
+    position: absolute; /* Necesario para posicionar el contenido desplegable */
+    background-color: white; /* Fondo blanco */
+    min-width: 160px; /* Ancho mínimo */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Sombra */
+    z-index: 1; /* Asegura que esté por encima de otros elementos */
+    white-space: nowrap;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block; /* Muestra el contenido al pasar el mouse */
+}
+
+.dropdown-content a {
+    color: #333; /* Color de texto para los enlaces */
+    padding: 12px 16px; /* Espaciado interno */
+    text-decoration: none; /* Sin subrayado */
+    display: block; /* Bloque para que toda el área sea clickeable */
+    white-space: nowrap;
+}
+
+
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1; /* Color de fondo al pasar el mouse */
+}
+
+/* Estilos para el select (desplegable) */
+.me-3 {
+    flex-grow: 1; /* Hace que el select ocupe todo el espacio disponible */
+    min-width: 250px; /* Ancho mínimo para evitar que se haga demasiado pequeño */
+}
+
+.form-select {
+    width: 100%; /* Ocupa el 100% del contenedor */
+    padding: 10px; /* Añade algo de relleno para que se vea bien */
+    font-size: 16px; /* Ajusta el tamaño de la fuente */
+    border-radius: 4px; /* Bordes redondeados */
+    border: 1px solid #ccc; /* Bordes suaves */
+    box-sizing: border-box; /* Asegura que el padding no afecte el tamaño total */
+    background-color: #fff; /* Fondo blanco */
+}
+
+/* Opcional: para mejorar la visibilidad del desplegable */
+.form-select:focus {
+    border-color: #88b5de; /* Cambia el color del borde al hacer foco */
+    outline: none; /* Elimina el borde predeterminado de enfoque */
+}
+
+
+/* Estilos para el mapa */
+#map {
+    height: 500px; /* Altura del mapa */
+    width: 100%;   /* Ancho completo */
+    border: 1px solid black;
+}
+
+/* Estilos para la tabla de datos */
+.data-container {
+    padding: 10px;
+}
+
 table {
     border-collapse: collapse;
     width: 100%;
 }
+
 table, th, td {
     border: 1px solid black;
 }
+
 th, td {
     padding: 8px;
     text-align: left;
 }
 
+/* Estilos para el footer */
+footer {
+    background-color: #343a40; /* Color de fondo oscuro */
+    color: white; /* Color de texto blanco */
+    padding: 20px; /* Espaciado interno */
+    text-align: center; /* Centra el texto */
+}
 
-#map {
-    height: 500px; /* Puedes ajustar la altura según sea necesario */
-    width: 100%;   /* Esto lo hará ocupar el ancho completo */
-    border: 1px;
-    border-color: black;
+.footer-container {
+    display: flex; /* Usa flexbox para alinear elementos */
+    flex-direction: column; /* Alinea los elementos en una columna */
+    align-items: center; /* Centra los elementos horizontalmente */
+}
+
+.footer-links {
+    margin-top: 10px; /* Espaciado entre el texto y los enlaces */
+}
+
+.footer-link {
+    color: white; /* Color de texto blanco para los enlaces */
+    text-decoration: none; /* Sin subrayado */
+    margin: 0 10px; /* Espacio entre enlaces */
+}
+
+.footer-link:hover {
+    text-decoration: underline; /* Subraya los enlaces al pasar el mouse */
+}
+
+* Estilos para los popups */
+.leaflet-popup-content {
+    font-size: 14px; /* Tamaño de texto en el popup */
+    color: #333; /* Color de texto */
+    padding: 10px; /* Espaciado interno */
+    background-color: #f9f9f9; /* Color de fondo del popup */
+    border-radius: 8px; /* Bordes redondeados */
+}
+
+/* Si quieres cambiar el borde de las capas */
+.leaflet-interactive {
+    stroke: #333; /* Color del borde de las capas */
+    stroke-width: 2px; /* Grosor del borde */
+}
+
+/* Puedes cambiar el color de las áreas cuando se pasa el mouse */
+.leaflet-interactive:hover {
+    fill-opacity: 0.9; /* Mayor opacidad al pasar el ratón */
+    stroke: #ff6347; /* Cambia el borde a un color diferente */
 }
